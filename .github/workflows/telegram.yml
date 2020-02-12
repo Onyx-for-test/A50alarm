@@ -2,7 +2,7 @@ name: Send telegram message
 
 on:
   schedule:
-  - cron: "* 43 10 ? * MON-FRI *"
+  - cron: "0 43/1 10 ? * MON-FRI *"
 
 jobs:
   stale:
@@ -10,10 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/stale@v1
+    - uses: actions/checkout@v1
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v1
       with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        stale-issue-message: 'Stale issue message'
-        stale-pr-message: 'Stale pull request message'
-        stale-issue-label: 'no-issue-activity'
-        stale-pr-label: 'no-pr-activity'
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Telegram
+      env:
+        telegram_tocken: ${{ secrets.telegram_tocken }}
+        telegram_mc: ${{ secrets.telegram_mc }}
+      run: |
+        python A50alarm.py
