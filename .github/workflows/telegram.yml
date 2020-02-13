@@ -2,7 +2,7 @@ name: Send telegram message
 
 on:
   schedule:
-  - cron: "0/1 * * * 1-5"
+  - cron: "0/5 * * * 1-5"
 
 jobs:
   stale:
