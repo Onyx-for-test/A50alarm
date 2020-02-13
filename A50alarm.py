@@ -2,7 +2,6 @@ import requests
 import json           
 import time
 import pandas as pd
-import config
 #9:33~15:57
 def getA50chart(x,y,z,w):
     custom_header = {
@@ -40,8 +39,8 @@ def getA50chart(x,y,z,w):
         report='급변',change_2
 
     import telepot
-    token = config.telegram_tocken
-    mc = config.telegram_mc
+    token = telegram_tocken
+    mc = telegram_mc
     bot = telepot.Bot(token)
 
     bot.sendMessage(mc,report)
