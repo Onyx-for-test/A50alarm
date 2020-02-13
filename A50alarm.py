@@ -2,12 +2,13 @@ import requests
 import json           
 import time
 import pandas as pd
+import schedule
 #9:33~15:57
-def getA50chart(x,y,z,w):
+def getA50chart():
     custom_header = {
-        'referer' : 'https://www.investing.com/charts/advinion.php?version=6.3.1.0&domain_ID=1&lang_ID=1&timezone_ID=8&pair_ID='+str(x)+'&interval=15M&user=204710788&majors='+str(y),
+        'referer' : 'https://www.investing.com/charts/advinion.php?version=6.3.1.0&domain_ID=1&lang_ID=1&timezone_ID=8&pair_ID=44486&interval=15M&user=204710788&majors=new_touch_pairs_indices_futures',
         'user-agent' : 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36'  }
-    url1="https://advcharts.investing.com/advinion2016/advanced-charts/1/1/8/GetRecentHistory?strSymbol="+str(x)+"&iTop=1500&strPriceType=bid&strFieldsMode=allFields&strUserID=204710788&strExtraData=lang_ID=1&strTimeFrame=1M"
+    url1="https://advcharts.investing.com/advinion2016/advanced-charts/1/1/8/GetRecentHistory?strSymbol=44486&iTop=1500&strPriceType=bid&strFieldsMode=allFields&strUserID=204710788&strExtraData=lang_ID=1&strTimeFrame=1M"
 
 
     req = requests.get(url1, headers = custom_header)
@@ -38,6 +39,7 @@ def getA50chart(x,y,z,w):
     if abs(change_2) >= 0.00 :
         report='급변',change_2
 
+    print(report)
     import telepot
     token = '827312654:AAFnFx7a9G5W4j7TwJJ50HMoSaaCEjfLu0A'
     mc = '-1001227507866'
@@ -45,4 +47,11 @@ def getA50chart(x,y,z,w):
 
     bot.sendMessage(mc,report)
 
-getA50chart('44486','new_touch_pairs_indices_futures','SGX China A50 Futures','A50futures.png')
+
+schedule.every(1).minutes.do(getA50chart)
+
+while True:
+    schedule.run_pending()
+    time.sleep(1)
+
+    
