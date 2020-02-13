@@ -39,8 +39,8 @@ def getA50chart(x,y,z,w):
         report='급변',change_2
 
     import telepot
-    token = telegram_tocken
-    mc = telegram_mc
+    token = '827312654:AAFnFx7a9G5W4j7TwJJ50HMoSaaCEjfLu0A'
+    mc = '-1001227507866'
     bot = telepot.Bot(token)
 
     bot.sendMessage(mc,report)
