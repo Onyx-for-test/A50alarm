@@ -34,9 +34,9 @@ def getA50chart(x,y,z,w):
 
     print(df)
     print(change_1,change_2)
-    if abs(change_1) >= 1.00 :
+    if abs(change_1) >= 0.00 :
         report='급변',change_1
-    if abs(change_2) >= 1.00 :
+    if abs(change_2) >= 0.00 :
         report='급변',change_2
 
     import telepot
