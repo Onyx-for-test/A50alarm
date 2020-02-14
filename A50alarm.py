@@ -35,9 +35,9 @@ def getA50chart():
     print(df)
     print(change_1,change_2)
     if abs(change_1) >= 0.00 :
-        report='급변',change_1
+        report_1='급변',change_1
     if abs(change_2) >= 0.00 :
-        report='급변',change_2
+        report_2='급변',change_2
 
     print(report)
     import telepot
@@ -45,7 +45,7 @@ def getA50chart():
     mc = '-1001227507866'
     bot = telepot.Bot(token)
 
-    bot.sendMessage(mc,report)
+    bot.sendMessage(mc,report_1)
 
 
 schedule.every(1).minutes.do(getA50chart)
