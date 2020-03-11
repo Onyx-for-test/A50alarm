@@ -3,4 +3,5 @@ json
 time 
 pandas
 telepot
-schedule
+bs4
+datetime
