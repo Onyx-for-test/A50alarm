@@ -1,57 +1,93 @@
 import requests
-import json           
 import time
+import datetime as dt
+from bs4 import BeautifulSoup
 import pandas as pd
-import schedule
-#9:33~15:57
-def getA50chart():
-    custom_header = {
-        'referer' : 'https://www.investing.com/charts/advinion.php?version=6.3.1.0&domain_ID=1&lang_ID=1&timezone_ID=8&pair_ID=44486&interval=15M&user=204710788&majors=new_touch_pairs_indices_futures',
-        'user-agent' : 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36'  }
-    url1="https://advcharts.investing.com/advinion2016/advanced-charts/1/1/8/GetRecentHistory?strSymbol=44486&iTop=1500&strPriceType=bid&strFieldsMode=allFields&strUserID=204710788&strExtraData=lang_ID=1&strTimeFrame=1M"
 
 
-    req = requests.get(url1, headers = custom_header)
-    if req.status_code == requests.codes.ok:
-        
-        datalist = json.loads(req.text)
-        data=datalist['data']
-        data=pd.DataFrame(data)
-        
-    f=data.set_index('date')
-    df=f[['open','high','low','close']]
-    
-    change=datalist['change']
-    changePercent=datalist['changePercent']
-    last=datalist['lastClose']
-    df=df.tail(10)
-    first_low=df['low'].iloc[0]
-    first_high=df['high'].iloc[0]
-    last_low=df['low'].iloc[9]
-    last_high=df['high'].iloc[9]
-    change_1=round((last_high/first_low - 1)*100,2)
-    change_2=round((first_high/last_low - 1)*100,2)
-
-    print(df)
-    print(change_1,change_2)
-    if abs(change_1) >= 0.00 :
-        report_1='급변',change_1
-    if abs(change_2) >= 0.00 :
-        report_2='급변',change_2
-
-    print(report)
-    import telepot
-    token = '827312654:AAFnFx7a9G5W4j7TwJJ50HMoSaaCEjfLu0A'
-    mc = '-1001227507866'
-    bot = telepot.Bot(token)
-
-    bot.sendMessage(mc,report_1)
+H=dt.timedelta(days=1)
 
 
-schedule.every(1).minutes.do(getA50chart)
+now=dt.datetime.now()
+now0=now-H
+now1=now+H
 
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+t0=now0.strftime('%A %B %d %Y')
+t=now.strftime('%A %B %d %Y')
+nowt=now.strftime('%H:%M')
+print(nowt)
+t1=now1.strftime('%A %B %d %Y')
 
-    
+kt=now.strftime('%A %B %d')
+
+timestamp=round(dt.datetime.timestamp(now))
+
+url="https://tradingeconomics.com/calendar"
+cookie='te-cal-countries=chn,usa; te-cal-importance=1; te-cal-range=3; TECalendarOffset=540; _ga=GA1.2.445467452.1577668410;  ASP.NET_SessionId=iuvqqldziyulh5kxaxt4cjn2; _gid=GA1.2.313629741.'+str(timestamp)+'; TEServer=TEIIS; _gat=1'
+cookie=cookie.encode('utf-8')
+custom_header = {
+    'referer' : 'https://tradingeconomics.com/calendar',
+    'user-agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
+                    AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36',
+    'cookie' : cookie}
+req = requests.get(url,headers = custom_header)
+soup = BeautifulSoup(req.text, 'html5lib')
+data=soup.find('table',{'id':'calendar'})
+
+date=data.find_all('thead',{'class':'table-header'})
+sort=soup.select('#calendar > tbody')
+
+df=pd.read_csv('category_list.txt',header=None)
+
+result_list=[]
+for i in range(len(date)):
+    date1=date[i].select('th')[0].text.strip()
+
+    if date1==t:
+            
+        result_list1=[]
+        for j in range(len(df)):
+            Country=df[0].values.tolist()
+            Category=df[1].values.tolist()
+            sort1=sort[i].find('tr',{'data-country':Country[j],'data-event':Category[j]})
+            if sort1 != None:
+                time=sort1.select('span')[0].text.strip()
+                time=dt.datetime.strptime(str(time), '%I:%M %p')
+                time=time.strftime('%H:%M')
+                country=sort1.find('td',{'class':'calendar-iso'}).text.strip()
+                title=sort1.select('td')[4].text.strip()
+                title=title.split('\n')[0].strip()
+                previous=sort1.find('span',{'id':'previous'}).text.strip()
+                consensus=sort1.find('a',{'id':'consensus'})
+                actual=sort1.find('span',{'id':'actual'}).text.strip()
+                if actual=='':
+                    if nowt>time:
+                        if consensus != None :
+                            consensus=consensus.text.strip()
+                            result=str(time)+' '+str(country)+' '+str(title)+\
+                                  '\n(Actual: '+str(actual)+\
+                                  ', Consensus: '+str(consensus)+\
+                                  ', Previous: '+str(previous)+\
+                                  ')'
+                        else:
+                            result=str(time)+' '+str(country)+' '+str(title)
+                        result_list1.append(result)
+                        result_listt1=sorted(result_list1,key=lambda x:x[:5])
+
+        result_list.append(result_list1)
+rl=[]
+for r in result_list:
+    result_list = "\n\n".join(r[0:])
+    rl.append(result_list)
+result_list= "\n\n".join(rl[0:])
+print(result_list)
+
+
+import telepot
+
+token = "827312654:AAFnFx7a9G5W4j7TwJJ50HMoSaaCEjfLu0A"
+mc = "-1001227507866"
+mc = "694014464"
+bot = telepot.Bot(token)
+
+#bot.sendMessage(mc,result_list)
