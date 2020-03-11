@@ -1,0 +1,30 @@
+china,inflation rate yoy
+china,ppi yoy
+united states,ism manufacturing pmi
+united states,core inflation rate yoy
+united states,president trump speech
+china,caixin manufacturing pmi
+united states,ism manufacturing pmi
+united states,g7 conference call
+united statesfed interest rate decision
+china,caixin services pmi
+united states,ism non-manufacturing pmi
+united states,adp employment change
+china,exports
+united states,imports
+china,industrial production yoy
+united states,retail sales mom
+united states,jolts job openings
+united states,building permits
+united states,fed interest rate decision
+united states,philadelphia fed manufacturing index
+united states,existing home sales
+china,loan prime rate 1y
+united states,new home sales
+united states,durable goods orders mom
+united states,gdp growth rate qoq final
+china,industrial profits (ytd) yoy
+united states,pending home sales yoy
+china,nbs manufacturing pmi
+china,non manufacturing pmi
+united states,unemployment rate
