@@ -3,5 +3,5 @@ json
 time 
 pandas
 telepot
-bs4
+beautifulsoup4
 datetime
