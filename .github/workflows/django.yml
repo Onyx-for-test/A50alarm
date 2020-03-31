@@ -28,4 +28,4 @@ jobs:
   
     - name: Run Tests
       run: |
-        python dow1896interactive.py test
+        python dow1896interactive.py
