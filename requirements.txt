@@ -1,7 +1,2 @@
-requests
-json
-time 
-pandas
-telepot
-beautifulsoup4
-datetime
+pyecharts
+ta-lib
