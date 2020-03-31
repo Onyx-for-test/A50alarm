@@ -3,7 +3,7 @@ from pyecharts.commons.utils import JsCode
 from pyecharts.charts import Kline, Line, Bar, Grid, Page, Tab
 import pandas as pd
 import numpy as np
-import talib as ta
+from typing import List, Sequence, Union
 
 def split_data(origin_data) -> dict:
     datas = []
@@ -28,8 +28,20 @@ def split_data(origin_data) -> dict:
        
     }
 
-def calculate_ma(day_count: int, p):
+def calculate_ma1(day_count: int, p):
     result=ta.MA(p,timeperiod=day_count)
+    return result
+def calculate_ma(day_count: int):
+    result: List[Union[float, str]] = []
+
+    for i in range(len(data["times"])):
+        if i < day_count:
+            result.append("-")
+            continue
+        sum_total = 0.0
+        for j in range(day_count):
+            sum_total += float(data["datas"][i - j][1])
+        result.append(abs(float("%.2f" % (sum_total / day_count))))
     return result
 
 def get_df(filename):
@@ -51,7 +63,7 @@ def get_df(filename):
 def draw_charts(nome,day):
     get_df(nome)
     echarts_data = df
-        
+    global data
     data = split_data(origin_data=echarts_data)
     #
     kline = (
@@ -104,28 +116,28 @@ def draw_charts(nome,day):
         .add_xaxis(xaxis_data=data["times"])
         .add_yaxis(
             series_name="MA20",
-            y_axis=calculate_ma(day_count=20,p=price),
+            y_axis=calculate_ma(day_count=20),
+            
             is_smooth=True,
             linestyle_opts=opts.LineStyleOpts(opacity=0.5),
             label_opts=opts.LabelOpts(is_show=False),
         )
         .add_yaxis(
             series_name="MA60",
-            y_axis=calculate_ma(day_count=60,p=price),
+            y_axis=calculate_ma(day_count=60),
             is_smooth=True,
             linestyle_opts=opts.LineStyleOpts(opacity=0.5),
             label_opts=opts.LabelOpts(is_show=False),
         )
         .add_yaxis(
             series_name="MA120",
-            y_axis=calculate_ma(day_count=120,p=price),
+            y_axis=calculate_ma(day_count=120),
             is_smooth=True,
             linestyle_opts=opts.LineStyleOpts(opacity=0.5),
             label_opts=opts.LabelOpts(is_show=False),
         ).add_yaxis(
             series_name="MA200",
-            y_axis=calculate_ma(day_count=200,p=price
-                                ),
+            y_axis=calculate_ma(day_count=200),
             is_smooth=True,
             linestyle_opts=opts.LineStyleOpts(opacity=0.5),
             label_opts=opts.LabelOpts(is_show=False),
