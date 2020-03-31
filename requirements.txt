@@ -1,4 +1,4 @@
 pyecharts
 pandas
 numpy
-talib
+ta-lib
