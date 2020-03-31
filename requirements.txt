@@ -1,2 +1,2 @@
 pyecharts
-ta-lib
+TA_Lib-0.4.17-cp38-cp38-win_amd64.whl
