@@ -1,1 +1,4 @@
 pyecharts
+pandas
+numpy
+talib
